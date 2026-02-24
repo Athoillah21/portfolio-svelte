@@ -16,6 +16,11 @@
     box-sizing: border-box;
   }
 
+  html {
+    font-size: 80%;
+    /* Scale all rem-based sizing to match 80% zoom feel */
+  }
+
   body,
   html {
     height: 100%;
