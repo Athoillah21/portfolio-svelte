@@ -86,7 +86,7 @@
 <!-- Floating Chat Button -->
 <button
     onclick={toggleChat}
-    class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
+    class="fixed bottom-12 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
     style="background: linear-gradient(135deg, #7c3aed, #a855f7); box-shadow: 0 4px 20px rgba(124,58,237,0.4);"
     title="Chat with AI Assistant"
 >
@@ -98,7 +98,7 @@
 <!-- Chat Window -->
 {#if isOpen}
     <div
-        class="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden flex flex-col"
+        class="fixed bottom-28 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden flex flex-col"
         style="height: 480px; background: rgba(10,10,20,0.95); border: 1px solid rgba(147,51,234,0.3); box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(147,51,234,0.1); backdrop-filter: blur(20px);"
     >
         <!-- Header -->
