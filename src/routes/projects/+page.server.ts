@@ -1,0 +1,41 @@
+import type { PageServerLoad } from './$types';
+import { getDb } from '$lib/server/db';
+
+const fallbackProjects = [
+    { id: 'pg-growth', title: 'pg_growth', description: 'Custom PostgreSQL extension built in C that captures and tracks database size growth metrics.', icon: 'database', tags: ['PostgreSQL', 'C Programming', 'Extension', 'Monitoring'], githubUrl: 'https://github.com/Athoillah21/pg_growth', mediumUrl: 'https://medium.com/@muhammadathoillah62/pg-growth-crafting-my-first-postgresql-extension-42520cb6bb5a' },
+    { id: 'project-mk42f1kn', title: 'Tuning Buddy', description: 'Intelligent PostgreSQL query optimization assistant powered by Gemini, DeepSeek, and Groq API.', icon: 'brain', tags: ['Python', 'Django', 'Tuning Query', 'AI/ML', 'Gemini API', 'DeepSeek API', 'Groq API'], githubUrl: 'https://github.com/Athoillah21/tuning-buddy', mediumUrl: 'https://tuning-buddy.vercel.app/' },
+    { id: 'project-mk42ak22', title: 'Capacity Planning Report', description: 'Comprehensive infrastructure capacity analysis tool for EDB PostgreSQL.', icon: 'bar-chart-3', tags: ['Shell Script', 'HTML', 'Capacity Planning', 'Multi-Database', 'Multi-Server'], githubUrl: 'https://github.com/Athoillah21/capacity_planning_report', mediumUrl: 'https://athoillah21.github.io/capacity_planning_report/v6-postgresql/sample_postgresql_preview.html' },
+    { id: 'project-mjn4rhf2', title: 'Barman Automate Report', description: 'Automated Barman backup monitoring solution that scans multiple PostgreSQL backup servers.', icon: 'shield-check', tags: ['Shell Script', 'Barman', 'Automation', 'Reporting'], githubUrl: 'https://github.com/Athoillah21/Barman-Report', mediumUrl: 'https://athoillah21.github.io/Barman-Report/results/barman_status_2025-12-26.html' },
+    { id: 'project-mjn2qlnk', title: 'Liquid Glass DB Reporter', description: 'Premium multi-database health monitoring with elegant liquid glass UI design.', icon: 'sparkles', tags: ['Shell Script', 'Glassmorphism', 'UI Design', 'PostgreSQL'], githubUrl: 'https://github.com/Athoillah21/Healthcheck-Report-Liquid-Glass-Style', mediumUrl: 'https://athoillah21.github.io/Healthcheck-Report-Liquid-Glass-Style/result/daily_handover_report_liquid_2025-12-25%20135116.html' },
+    { id: 'project-mjn2ojos', title: 'Multi-DB Healthcheck Reporter', description: 'Automated multi-database health monitoring solution for consolidation servers.', icon: 'server', tags: ['Shell Script', 'PostgreSQL', 'Multi-DB', 'Reporting'], githubUrl: 'https://github.com/Athoillah21/Healthcheck-Report-Consolidation-Server', mediumUrl: 'https://athoillah21.github.io/Healthcheck-Report-Consolidation-Server/result/daily_health_check_report_sample.html' },
+    { id: 'project-mjlf9fmh', title: 'PostgreSQL Healthcheck - Email Alerts', description: 'Automated database health monitoring script that delivers detailed HTML reports via SMTP email.', icon: 'mail', tags: ['Shell Script', 'PostgreSQL', 'Email', 'Automation'], githubUrl: 'https://github.com/Athoillah21/Healthcheck_PostgreSQL_to_Email', mediumUrl: 'https://athoillah21.github.io/Healthcheck_PostgreSQL_to_Email/report/db_healthcheck_report_postgres_2025-05-19.html' },
+    { id: 'project-mjlfdbld', title: 'PostgreSQL Healthcheck - Telegram Bot', description: 'Python-powered database monitoring tool that sends real-time alerts via Telegram Bot API.', icon: 'send', tags: ['Python', 'Telegram', 'Bot API', 'PostgreSQL'], githubUrl: 'https://github.com/Athoillah21/Telegram_Bot_for_Healthcheck_PostgreSQL', mediumUrl: 'https://github.com/Athoillah21/Telegram_Bot_for_Healthcheck_PostgreSQL' },
+    { id: 'simple-dbaas', title: 'Simple DBaaS', description: 'A Database-as-a-Service application developed using Flask, deployed on Amazon EC2.', icon: 'cloud', tags: ['Python', 'Flask', 'AWS', 'PostgreSQL'], githubUrl: 'https://github.com/Athoillah21/DBaaS-Project', mediumUrl: 'https://medium.com/@muhammadathoillah62/building-postgresql-database-as-a-service-dbaas-platform-for-automated-database-management-and-61a8abb06978' },
+    { id: 'fhci-2022', title: 'FHCI BUMN Job Data Scraper', description: 'Automated web scraping solution using Python and Selenium to extract job listings.', icon: 'file-search', tags: ['Python', 'Selenium', 'Web Scraping', 'Data Analysis'], githubUrl: 'https://github.com/Athoillah21/Project-FHCI', mediumUrl: 'https://www.linkedin.com/posts/muhammadathoillah_summary-fhcibumn-analysis-activity-7005568875777921025-iw4S' },
+    { id: 'project-mjjrhr34', title: 'Athoillah-Portofolio', description: 'Personal portfolio website showcasing projects and professional experience.', icon: 'user', tags: ['HTML', 'CSS', 'JavaScript', 'Tailwind'], githubUrl: 'https://github.com/Athoillah21/athoillah21.github.io', mediumUrl: 'https://athoillah21.github.io' },
+    { id: 'project-mjjrjnbs', title: 'Firda-Portofolio', description: "Portfolio website created for my wife featuring her work and achievements.", icon: 'heart', tags: ['HTML', 'CSS', 'JavaScript', 'Web Design'], githubUrl: 'https://github.com/Athoillah21/firda-repo', mediumUrl: 'https://athoillah21.github.io/firda-repo/' }
+];
+
+export const load: PageServerLoad = async () => {
+    const db = getDb();
+
+    if (db) {
+        try {
+            const rows = await db`SELECT * FROM projects WHERE status = 'published' ORDER BY sort_order ASC`;
+            if (rows.length > 0) {
+                return {
+                    projects: rows.map((r: Record<string, unknown>) => ({
+                        id: r.id, title: r.title, description: r.description,
+                        image: r.image || '', icon: r.icon || '', imageText: r.image_text || '',
+                        tags: r.tags || [], githubUrl: r.github_url || '', mediumUrl: r.medium_url || '',
+                        status: r.status
+                    }))
+                };
+            }
+        } catch (e) {
+            console.warn('DB query failed for projects:', e);
+        }
+    }
+
+    return { projects: fallbackProjects };
+};

@@ -1,0 +1,7 @@
+# Robots.txt for Athoillah's Portfolio
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /login
+
+Sitemap: https://athoillah.dev/sitemap.xml
